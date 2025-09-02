@@ -1,12 +1,33 @@
 package com.agenda;
 
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
+@Entity
+@Table(name = "contatos")
 public class Contato {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @NotBlank(message = "O nome é obrigatório")
+    @Column(nullable = false)
     private String nome;
+
+    @NotBlank(message = "O telefone é obrigatório")
+    @Column(nullable = false, unique = true)
     private String telefone;
+
+    @Email(message = "Formato de e-mail inválido")
+    @Column
     private String email;
+
+    // Construtor padrão exigido pelo JPA
+    public Contato() {
+    }
 
     public Contato(String nome, String telefone, String email) {
         this.nome = nome;
@@ -14,11 +35,11 @@ public class Contato {
         this.email = email;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -51,21 +72,11 @@ public class Contato {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contato contato = (Contato) o;
-        return Objects.equals(nome, contato.nome) &&
-               Objects.equals(telefone, contato.telefone);
+        return Objects.equals(telefone, contato.telefone);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, telefone);
-    }
-
-    @Override
-    public String toString() {
-        return "Contato{" +
-                "nome='" + nome + '\'' +
-                ", telefone='" + telefone + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return Objects.hash(telefone);
     }
 }
